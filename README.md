@@ -177,7 +177,7 @@ composer require "moviet/panic-validator"
 
 ### Modify Pattern
 
-* You can modify with **_modify_** like _your own rules_
+* You can modify with **_modify_** like modify _your own rules_
    ```php
    $myrule = $panic->case('My name is yoyo')
                    ->min(2)
@@ -249,16 +249,17 @@ composer require "moviet/panic-validator"
    // Output : And thanos will go on
    ```
 
-### Patterns
+### Patterns:
 
 | Attributes     | Format                       | 
 | -------------- |:-----------------------------| 
 | :num           | 0-9                          |
-| :phone         | +081991988xx                 | 
-| :int           | 0-9                          | 
+| :phone         | +081991988xx (+)             | 
+| :int           | Integer/Number               | 
 | :alpha         | alphabets                    |
 | :alphaNum      | Alphabets Number             | 
-| :alphaSpace    | Alphabets Spaces             |
+| :alphaSpace    | Alphabets Plus Spaces        |
+| :alNumSpace    | Alphabets Number Spaces      |
 | :query         | Http UrlQuery                |
 | :url           | Url                          |
 | :image         | Jpg, Jpeg, Png, Bmp, Gif     |
@@ -268,16 +269,16 @@ composer require "moviet/panic-validator"
 | :email         | Email Address                |
 | :message       | Simple message characters    |
 
-### Filters
+### Filters:
 
-| Attributes     | Native                       | 
+| Attributes     | Format                       | 
 | -------------- |:-----------------------------| 
 | :int           | Filter Validate Integer      |
 | :float         | Filter Validate Float        | 
 | :url           | Filter Validate Url          | 
 | :domain        | Filter Validate Domain       |
-| :ip4           | Filter Validate IP 4         | 
-| :ip6           | Filter Validate IP 6         |
+| :ip4           | Filter Validate IP4          | 
+| :ip6           | Filter Validate IP6          |
 | :email         | Filter Validate Email        |
 
 
