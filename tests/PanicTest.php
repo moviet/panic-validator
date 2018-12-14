@@ -133,7 +133,7 @@ class PanicTest extends TestCase
     public function testValidateWithDefaultLanguageFailure()
     {
         $validate = $this->setUp()->case('abcde')
-                                ->min(2)
+                                ->min(7)
                                 ->rule(':alpha')
                                 ->throw(['Must Be Number']);
 
