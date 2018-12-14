@@ -179,7 +179,7 @@ composer require "moviet/panic-validator"
 
 * You can modify with **_modify_** like _your own rules_
    ```php
-   $myrule = $panic->case('My Name Is Panic')
+   $myrule = $panic->case('My name is yoyo')
                    ->min(2)
                    ->max(20)
                    ->modify('/^[a-zA-Z 0-9]*$/')
@@ -224,13 +224,13 @@ composer require "moviet/panic-validator"
 * You can sanitize with our little pony for simply safe html as one packet
 
    ```php
-   $stringHtml = '<script> If This Is XSS </script>';
+   $stringHtml = '<script> If this is XSS </script>';
 
    $filterHtml = $panic->htmlSafe($stringHtml); 
 
    $html = $panic->htmlRaw($filterHtml); 
 
-   // Output : <script> If This Is XSS </script>
+   // Output : <script> If this is XSS </script>
    ```
 
 ### Plus Bonus
