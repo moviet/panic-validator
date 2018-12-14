@@ -132,7 +132,7 @@ class PanicTest extends TestCase
 		
 	public function testValidateWithLanguageIdFailure()
     {
-				$validate = $this->setUp()->case('abcde') 
+		$validate = $this->setUp()->case('abcde') 
 								->lang('Id')
                                 ->min(2)
                                 ->rule(':num')
