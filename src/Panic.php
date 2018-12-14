@@ -182,10 +182,7 @@ class Panic
 
             $supress = $string[self::COUNT_SIZE_CLEAN];
 
-        } else {
-
-            return false;
-        }
+        } 
 
         return $supress;				
     }	
