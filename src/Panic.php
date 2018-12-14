@@ -182,10 +182,6 @@ class Panic
 
             $supress = $string[self::COUNT_SIZE_CLEAN];
 
-        } elseif ($supress >= self::COUNT_MESSAGE) {
-
-            $supress = $string[self::TOTAL_COUNT_MSG];
-
         } else {
 
             return false;
