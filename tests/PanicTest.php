@@ -401,10 +401,9 @@ class PanicTest extends TestCase
 
         $validate = $this->setUp()->verify($password,'$2y$14$cSUK14J/Uz8WroJyeagwx.grUaKNX85NbxC3z96nLJQ0aItIjTBbe')->warn('Password Invalid');
 
-        if ($this->setUp()->catch($validate)) {
+        $wrongPass = $this->setUp()->catch($validate);
 
-            $this->assertFalse($validate);
-        } 
+        $this->assertFalse($wrongPass);
     }
 		
     public function testValidationPasswordFailureMessage()
