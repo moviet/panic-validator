@@ -1,7 +1,7 @@
 {
     "name": "moviet/panic-validator",
-    "description": "A standalone php validation library for php",
-    "keywords": ["php-validation", "php-validator", "validation", "validator", "sanitazion", "filter"],
+    "description": "A simple php validation library for php",
+    "keywords": ["php-validation", "php-validator", "validation", "validator", "sanitation", "sanitize", "filter"],
     "homepage": "https://github.com/moviet/panic-validator",
     "type": "library",
     "license": "MIT",
