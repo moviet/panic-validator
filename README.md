@@ -54,7 +54,7 @@ composer require "moviet/panic-validator"
 
   // var_dump : Smile
   ```
-  The above will return value, if doesn't match will give **_thrown_** _exception_
+  The above will return value, if doesn't match will **_return false_**
 
 * Or maybe you enjoy quietly with something like this
    ```php
