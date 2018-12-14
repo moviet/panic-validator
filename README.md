@@ -71,7 +71,7 @@ composer require "moviet/panic-validator"
   $request = $_POST['String']; 
 
   $post = $panic->case($request)
-                ->rule(':alphaNumSpace')
+                ->rule(':alNumSpace')
                 ->throw(['Do not burn your finger, invalid !!']);
   ```
 
@@ -108,8 +108,12 @@ composer require "moviet/panic-validator"
    $validPass = $panic->case($_POST['password'])
                       ->auth(8)
                       ->throw(['Password minimum 8 characters']);
+                      
+   $tokenLog  = $panic->case($_POST['csrf'])
+                      ->rule(':alphaNum')
+                      ->get();
 
-   $data = [$validUser, $validPass];
+   $data = [$validUser, $validPass, $tokenLog];
 
    if ($panic->confirm($data) !== false) {
 
@@ -154,12 +158,15 @@ composer require "moviet/panic-validator"
                     ->rule(':int')
                     ->throw(['Your token of course, invalid !!']);
 
-   $validate = [$product, $tokenId];
+   $validate = [$product, $tokenId]; 
 
-   $trust = $panic->trust([$_GET], $validate);
-
-   $trust[0] // Equivalent $product
-   $trust[1] // Equivalent $tokenId
+   $entry = $panic->trust($_GET, $validate);
+   
+   // to retrieve data, please use array
+   
+   if ($entry !== false)
+   $entry[0] // Equivalent $product
+   $entry[1] // Equivalent $tokenId
    Next Next...
    ```  
 
@@ -216,7 +223,7 @@ composer require "moviet/panic-validator"
       // $_POST['password']
    }
 
-   // Wrong Output => Do not type password, please use Abcde !!
+   // Print $data => Do not type password, please use Abcde !!
    ```
 
 ### Sanitize Html
