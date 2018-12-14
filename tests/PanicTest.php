@@ -10,6 +10,7 @@
 namespace Moviet\Testing;
 
 use Moviet\Validator\Panic;
+use \Exception;
 use PHPUnit\Framework\TestCase;
 
 class PanicTest extends TestCase
@@ -115,6 +116,31 @@ class PanicTest extends TestCase
         $this->assertFalse($num);
 
         $this->assertTrue($null);
+		}
+		
+		public function testValidateWithEmptyCaseFailure()
+    {
+        $validate = $this->setUp()->case('') 
+                                ->max(7)
+                                ->rule(':alpha')
+                                ->throw(['Must Be Alphabets']);
+
+        $valid = $this->setUp()->confirm([$validate]);
+
+        $this->assertFalse($valid);
+		}
+		
+		public function testValidateWithLanguageIdFailure()
+    {
+				$validate = $this->setUp()->case('abcde') 
+																->lang('Id')
+                                ->min(2)
+                                ->rule(':num')
+                                ->throw(['Must Be Number']);
+
+        $valid = $this->setUp()->confirm([$validate]);
+
+        $this->assertFalse($valid);
     }
 
     public function testValidateMinimumRequirementFailure()
@@ -142,7 +168,18 @@ class PanicTest extends TestCase
         $this->assertFalse($valid);
     }
 
-    public function testValidateMinPasswordLengthFailure()
+    public function testValidateMinPasswordLengthSuccess()
+    {
+        $validate = $this->setUp()->case('injection')
+                                ->auth(8)
+                                ->throw(['Password Minimum 8 Characters']);
+
+        $valid = $this->setUp()->confirm([$validate]);
+
+        $this->assertTrue($valid);
+		}
+		
+		public function testValidateMinPasswordLengthFailure()
     {
         $validate = $this->setUp()->case('inject')
                                 ->auth(8)
@@ -150,9 +187,27 @@ class PanicTest extends TestCase
 
         $valid = $this->setUp()->confirm([$validate]);
 
-        $this->assertTrue($valid);
-    }
+        $this->assertFalse($valid);
+		}
 
+		public function testValidationWithReturnValue()
+    {
+        $image = 'file.jpg';
+
+        $validate = $this->setUp()->case($image)->rule(':image')->get();
+
+        $this->assertEquals($validate, $image);
+		}
+		
+		public function testSingleValidationFailure()
+    {
+				$string = 'Whatever';
+
+				$validate = $this->setUp()->case($string)->rule(':num')->get();		
+
+				$this->assertFalse($validate);
+    }
+		
     public function testValidationThrowSuccess()
     {
         $mock = $this->createMock(Panic::class);
@@ -168,15 +223,6 @@ class PanicTest extends TestCase
         $this->assertEquals($validate, $mock->throw(null));
 
         $this->assertTrue($valid);
-    }
-
-    public function testValidationWithCallback()
-    {
-        $image = 'file.jpg';
-
-        $validate = $this->setUp()->case($image)->rule(':image')->get();
-
-        $this->assertEquals($validate, $image);
     }
 
     public function testValidationThrowFailure()
@@ -196,13 +242,22 @@ class PanicTest extends TestCase
         $this->assertFalse($valid);
     }
 
-    public function testValidationWithPatternFailure()
+    public function testValidationWithMatchPatternSuccess()
     {
-        $url = 'test@email..com';
+        $email = 'test@email.com';
 
-        $validate = $this->setUp()->match(':email',$url);
+        $validate = $this->setUp()->match(':email',$email);
 
-        $this->assertFalse($validate);
+        $this->assertEquals($validate, $email);
+		}
+		
+		public function testValidationWithMatchPatternFailure()
+    {
+        $email = 'test@email..com';
+
+        $validate = $this->setUp()->match(':email',$email);
+
+				$this->assertFalse($validate);
     }
 
     public function testValidationWithFilter()
@@ -224,7 +279,29 @@ class PanicTest extends TestCase
                                 ->throw(['something wrong']);
 
         $this->assertNull($myrule);
-    }
+		}
+		
+		public function testValidateUsingModifyPatternFailure()
+    {
+        $validate = $this->setUp()->case('try this')
+                                ->min(2)
+                                ->max(5)
+                                ->modify('/^[a-zA-Z 0-9]*$/')
+                                ->throw(['Must Be Alphabets']);
+
+        $valid = $this->setUp()->confirm([$validate]);
+
+        $this->assertFalse($valid);
+		}
+		
+		public function testValidationWithFilterFailure()
+    {
+        $string = 'Hello Foo';
+
+        $validate = $this->setUp()->filter(':int',$string);
+
+        $this->assertFalse($validate);
+		}
 
     public function testValidationWithCustomRegex()
     {
@@ -233,6 +310,15 @@ class PanicTest extends TestCase
         $validate = $this->setUp()->draft('/^[a-zA-Z ]*$/',$string);
 
         $this->assertEquals($validate, $string);
+		}
+		
+		public function testValidationWithDraftFailure()
+    {
+        $string = 'Hello Foo';
+
+        $validate = $this->setUp()->draft('/^[0-9]*$/',$string);
+
+        $this->assertFalse($validate);
     }
 
     public function testValidationCompare()
@@ -244,6 +330,17 @@ class PanicTest extends TestCase
         $equal = $this->setUp()->equal($validate, $string);
 
         $this->assertTrue($equal);
+		}
+		
+		public function testValidationCompareFailure()
+    {
+        $string = 'Hello Foo';
+
+        $validate = $this->setUp()->draft('/^[0-9]*$/',$string);
+
+        $equal = $this->setUp()->equal($validate, $string);
+
+        $this->assertFalse($equal);
     }
 
     public function testValidationCompareHashEqual()
@@ -255,9 +352,20 @@ class PanicTest extends TestCase
         $equal = $this->setUp()->hashEqual($validate, $string);
 
         $this->assertTrue($equal);
+		}
+		
+		public function testValidationCompareHashEqualFailure()
+    {
+				$validate = 'a23cabadaed728278badbe0100920ababdcbe204940faefan03';
+
+        $string = 'a23cabadaed728278badbe0100920ababdcbe204940faefan030';
+
+        $equal = $this->setUp()->hashEqual($validate, $string);
+
+        $this->assertFalse($equal);
     }
 
-    public function testValidationPassword()
+    public function testValidationPasswordSuccess()
     {
         $password = 'This is my password';
 
@@ -265,15 +373,33 @@ class PanicTest extends TestCase
 
         if ($this->setUp()->catch($validate)) {
 
-        $this->assertTrue($validate);
+        		$this->assertTrue($validate);
+        } 
+		}
+		
+		public function testValidationPasswordFailure()
+    {
+        $password = 'This is not my password';
 
-        } else {
+        $validate = $this->setUp()->verify($password,'$2y$14$cSUK14J/Uz8WroJyeagwx.grUaKNX85NbxC3z96nLJQ0aItIjTBbe')->warn('Password Invalid');
 
-            $this->assertFalse($validate);
-        }
+        if ($this->setUp()->catch($validate)) {
+
+						$this->assertFalse($validate);
+        } 
+		}
+		
+		public function testValidationPasswordFailureMessage()
+    {
+        $password = 'This is not my password';
+
+				$validate = $this->setUp()->verify($password,'$2y$14$cSUK14J/Uz8WroJyeagwx.grUaKNX85NbxC3z96nLJQ0aItIjTBbe')
+				->warn('Password Invalid');
+
+				$this->assertEquals('Password Invalid',$validate); 
     }
 
-    public function testValidationUsingErrorMessageAndCallback()
+    public function testValidationUsingTrustCallback()
     {
         $post = [12345,123456];
 
@@ -284,6 +410,19 @@ class PanicTest extends TestCase
         $val = $this->setUp()->trust($post, [$validate,$validate2]);
 
         $this->assertEquals($val[0], $post[0]);
+		}
+		
+		public function testValidationCustomModifyAndFailure()
+    {
+        $post = [12345,123456];
+
+        $validate = $this->setUp()->case($post[0])->rule(':alpha')->throw(['Must Be Alphabet']);
+
+        $validate2 = $this->setUp()->case($post[1])->rule(':num')->throw(['Must Be Alphabet']);
+
+        $val = $this->setUp()->trust($post, [$validate,$validate2]);
+				
+				$this->assertFalse($val);
     }
 
     public function testEncodingNiceBase64()

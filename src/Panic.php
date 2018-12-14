@@ -234,7 +234,7 @@ class Panic
 
         if (!is_null($this->auth) && $this->auth > Ival::DEFAULT_LENGTH) { 
 
-            if (strlen($this->case) >= $this->auth) {
+            if (strlen($this->case) < $this->auth) {
 
                 return $this->stress($message);
 
@@ -320,12 +320,12 @@ class Panic
     {
         if (empty($this->case)) {
 
-            throw new \Exception("Empty Field Doesn't Allow");
+            return false;
         }
 
         if ($this->misMatch(Ival::PATTERN[$this->rule[$this->case]], $this->case)) {
 
-            throw new \Exception('Request Invalid!');
+            return false;
         }
 
         return $this->case;
@@ -480,14 +480,12 @@ class Panic
 
             return true;
 
-        } elseif (is_array($param)) {
+        } else {
 
             foreach ([$param] as $key => &$value) 
 
                 return $value;
         }
-
-        return false;	
     }
 
     /**
