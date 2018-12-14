@@ -6,12 +6,12 @@ Panic - A simple php validation and sanitation
 [![codecov](https://codecov.io/gh/moviet/panic-validator/branch/master/graph/badge.svg)](https://codecov.io/gh/moviet/panic-validator)
 [![Codacy Badge](https://api.codacy.com/project/badge/Grade/fe6415f880494880b69cf574d9248f9d)](https://www.codacy.com/app/moviet/panic-validator?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=moviet/panic-validator&amp;utm_campaign=Badge_Grade)
 
-Panic validator is adobted for simple lovely and easy like **_common_** validation in php
+**Panic validator** is adobted for simple lovely and easy like **_common_** validation in php
 
 There are **no hardcoded** for simply usage, no weight and pretty useful
 
 ## Preparement
-* Composer 
+* [Composer](https://getcomposer.org) 
 * [Clone Github](https://github.com/moviet/panic-validator.git)
 * [Manual Download](https://github.com/moviet/panic-validator/archive/master.zip)
 
@@ -147,7 +147,7 @@ composer require "moviet/panic-validator"
 * If the above doesn't look so nice, you can **_trust_** with new endorse
    ```php
    $product = $panic->case($_GET['product'])
-                    ->rule(':alphaNumSpace')
+                    ->rule(':alNumSpace')
                     ->throw(['Do not only look, Please bo bo boy !!']);
 
    $tokenId = $panic->case($_GET['token_id'])
@@ -253,21 +253,21 @@ composer require "moviet/panic-validator"
 
 | Attributes     | Format                       | 
 | -------------- |:-----------------------------| 
-| :num           | 0-9                          |
-| :phone         | +081991988xx (+)             | 
+| :num           | 0 - 9                        |
+| :phone         | +081991988xx (plus +)        | 
 | :int           | Integer/Number               | 
-| :alpha         | alphabets                    |
+| :alpha         | Alphabets                    |
 | :alphaNum      | Alphabets Number             | 
 | :alphaSpace    | Alphabets Plus Spaces        |
 | :alNumSpace    | Alphabets Number Spaces      |
-| :query         | Http UrlQuery                |
-| :url           | Url                          |
-| :image         | Jpg, Jpeg, Png, Bmp, Gif     |
+| :query         | Http Url Query               |
+| :url           | Url Address                  |
+| :image         | jpg, jpeg, png, bmp, gif     |
 | :doc           | pdf,xls,doc,rtf,txt,ppt,pptx |
 | :address       | Normal Address               |
 | :subject       | Email Subject                |
 | :email         | Email Address                |
-| :message       | Simple message characters    |
+| :message       | Simple Message Characters    |
 
 ### Filters:
 
