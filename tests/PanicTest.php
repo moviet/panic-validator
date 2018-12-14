@@ -296,7 +296,7 @@ class PanicTest extends TestCase
                                 ->modify('/^[0-9]*$/')
                                 ->throw(['Must be number']);
 
-        $this->assertEquals('Must Be Number',$validate);
+        $this->assertEquals('Must be number', $validate);
     }
 		
     public function testValidateUsingModifyPatternFailure()
