@@ -129,6 +129,18 @@ class PanicTest extends TestCase
 
         $this->assertFalse($valid);
     }
+    
+    public function testValidateWithDefaultLanguageFailure()
+    {
+        $validate = $this->setUp()->case('abcde')
+                                ->min(2)
+                                ->rule(':alpha')
+                                ->throw(['Must Be Number']);
+
+        $valid = $this->setUp()->confirm([$validate]);
+
+        $this->assertFalse($valid);
+    }
 		
     public function testValidateWithLanguageIdFailure()
     {
