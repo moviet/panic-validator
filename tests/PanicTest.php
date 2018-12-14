@@ -207,6 +207,13 @@ class PanicTest extends TestCase
 
         $this->assertFalse($validate);
     }
+    
+    public function testSingleValidationWithEmptyValue()
+    {
+        $validate = $this->setUp()->case('')->rule(':num')->get();		
+
+        $this->assertFalse($validate);
+    }
 		
     public function testValidationThrowSuccess()
     {
@@ -276,18 +283,29 @@ class PanicTest extends TestCase
                                 ->min(2)
                                 ->max(20)
                                 ->modify('/^[a-zA-Z 0-9]*$/')
-                                ->throw(['something wrong']);
+                                ->throw(['Something wrong']);
 
         $this->assertNull($myrule);
+    }
+    
+    public function testValidateUsingModifyPatternAndMassageFailure()
+    {
+        $validate = $this->setUp()->case('try this')
+                                ->min(2)
+                                ->max(20)
+                                ->modify('/^[0-9]*$/')
+                                ->throw(['Must be number']);
+
+        $this->assertEquals('Must Be Number',$validate);
     }
 		
     public function testValidateUsingModifyPatternFailure()
     {
         $validate = $this->setUp()->case('try this')
                                 ->min(2)
-                                ->max(5)
-                                ->modify('/^[a-zA-Z 0-9]*$/')
-                                ->throw(['Must Be Alphabets']);
+                                ->max(20)
+                                ->modify('/^[0-9]*$/')
+                                ->throw(['Must be number']);
 
         $valid = $this->setUp()->confirm([$validate]);
 
