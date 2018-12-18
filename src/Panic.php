@@ -6,7 +6,7 @@
  * @package    Rammy Labs
  *
  * @author     Moviet
- * @license    http://www.opensource.org/licenses/mit-license.html  MIT Public License
+ * @license    MIT Public License
  *
  * @version    Build @@version@@
  */
@@ -20,42 +20,42 @@ use Moviet\Validator\Ival;
 class Panic
 {	
   /**
-     * @param string case
+     * @param string $case
      */
     protected $case;
 
     /**
-     * @param string language
+     * @param string $lang
      */
     protected $lang;
 
     /**
-     * @param int length
+     * @param int $min
      */
     protected $min;
 
     /**
-     * @param int length
+     * @param int $max
      */
     protected $max;
 
     /**
-     * @param string password
+     * @param string $auth
      */
     protected $auth;
 
     /**
-     * @param string pattern
+     * @param string $rule
      */
     protected $rule;
 
     /**
-     * @param string custom
+     * @param string $modify
      */
     protected $modify;
 
     /**
-     * @param boolen password
+     * @param string $verify
      */
     protected $verify;
 
@@ -82,11 +82,11 @@ class Panic
     /**
      * Generate validation case
      * 
-     * @param string
+     * @param string $case
      */
-    public function case($string = [])
+    public function case($case = [])
     {
-        $this->case = $string;
+        $this->case = $case;
 
         return $this;
     }
@@ -95,7 +95,7 @@ class Panic
      * Create global languages
      * Default English
      * 
-     * @param string
+     * @param string $language
      */
     public function lang($language)
     {
@@ -108,11 +108,11 @@ class Panic
      * Create minimum requirement
      * Default unlimited
      * 
-     * @param int number
+     * @param int $number
      */
-    public function min($param)
+    public function min($number)
     {
-        $this->min = is_numeric($param) ? $param : Ival::DEFAULT_LENGTH;
+        $this->min = is_numeric($number) ? $number : Ival::DEFAULT_LENGTH;
 
         return $this;
     }
@@ -121,11 +121,11 @@ class Panic
      * Create maximum requirement
      * Default unlimited
      * 
-     * @param int number
+     * @param int $numeric
      */
-    public function max($param)
+    public function max($numeric)
     {
-        $this->max = is_numeric($param) ? $param : Ival::EMPTY_SET;
+        $this->max = is_numeric($numeric) ? $numeric : Ival::EMPTY_SET;
 
         return $this;
     }
@@ -134,11 +134,11 @@ class Panic
      * Generate password validation
      * Especial for password
      * 
-     * @param int number
+     * @param int $numeric
      */
-    public function auth($param)
+    public function auth($numeric)
     {
-        $this->auth = is_numeric($param) ? $param : Ival::EMPTY_SET;
+        $this->auth = is_numeric($numeric) ? $numeric : Ival::EMPTY_SET;
 
         return $this;
     }
@@ -146,11 +146,11 @@ class Panic
     /**
      * Create default pattern
      * 
-     * @param string 
+     * @param string $rule
      */
-    public function rule($param = null)
+    public function rule($rule = null)
     {
-        $this->rule[$this->case] = $param;
+        $this->rule[$this->case] = $rule;
 
         return $this;
     }
@@ -158,11 +158,11 @@ class Panic
     /**
      * Modify custom pattern
      * 
-     * @param string pattern
+     * @param string $modify
      */
-    public function modify($param = null)
+    public function modify($modify = null)
     {
-        $this->modify[$this->case] = $param;
+        $this->modify[$this->case] = $modify;
 
         return $this;
     }
@@ -170,16 +170,14 @@ class Panic
     /**
      * Generate conditional message
      * 
-     * @return array message
-     * 
-     * @return false
+     * @param string $string
+     * @return array 
      */
     protected function stress($string)
     {	
         $supress = count($string);
 
         if ($supress < self::COUNT_MESSAGE) {
-
             $supress = $string[self::COUNT_SIZE_CLEAN];
 
         } 
@@ -191,13 +189,10 @@ class Panic
      * Generate customize message and languages
      * Require field, can't be blank
      * If language doesn't set, use default
+     * If characters doesn't match return message
      * 
-     * @param array string message
-     * 
-     * If characters doesn't match
+     * @param string $message
      * @return string
-     * 
-     * If validation okay
      * @return null
      */
     public function throw($message = [])
@@ -205,50 +200,38 @@ class Panic
         $lang = ($this->lang !== self::LANG_ID) ? self::LANG_EN : $this->lang;
 
         if (empty($this->case)) {
-
             return Ival::MUST;	
         } 
 
         if ($this->min > Ival::DEFAULT_LENGTH) { 
-
             if (strlen($this->case) < $this->min) {
-
                 return Ival::MIN[$lang];
             }
         }
 
         if ($this->max > Ival::DEFAULT_LENGTH) { 
-
             if (strlen($this->case) > $this->max) {
-
                 return Ival::MAX[$lang];
             }	
         }
 
         if (!is_null($this->auth) && $this->auth > Ival::DEFAULT_LENGTH) { 
-
             if (strlen($this->case) < $this->auth) {
-
                 return $this->stress($message);
 
             } else {
-
                 return Ival::EMPTY_SET;
             }
         }		
 
         if (!is_null($this->rule)) { 
-
             if ($this->misMatch(Ival::PATTERN[$this->rule[$this->case]], $this->case)) {
-
                 return $this->stress($message);
             }	
         }
 
         if (!is_null($this->modify)) { 
-
             if ($this->misMatch($this->modify[$this->case], $this->case)) {
-
                 return $this->stress($message);
             }	
         }
@@ -258,21 +241,17 @@ class Panic
 
     /**
      * Generate callback validation
-     * @param array $param
-     * @param array $validate
-     * 
-     * If doesn't match
-     * @return false string
-     * 
-     * If validated
-     * @return array value 
+     * If doesn't match return bool
+     *
+     * @param string $param
+     * @param string $validate
+     * @return string
+     * @return bool 
      */
     public function trust($param = [], $validate = [])
     {
         if (empty(array_filter($validate))) {
-
             foreach ([$param] as $key => &$value) {
-
                 return $key = $value;
             }
         }
@@ -281,19 +260,15 @@ class Panic
     }
 
     /**
-     * Generate confirmation
+     * Generate confirmation from validated
+     * If validate doesn't match give bool
+     *
      * @param string
-     * 
-     * If validate doesn't match
-     * @return false message
-     * 
-     * If validate okay
-     * @return true value
+     * @return bool
      */
     public function confirm($param = [])
     {
         if (array_filter(array_values($param))) {
-
             return false;
         } 
 
@@ -301,23 +276,18 @@ class Panic
     }
 
     /**
-     * Callback validation for single rule
+     * Generate validation for single rule
      * 
-     * If doesn't match
-     * @return thrown
-     * 
-     * If success 
+     * @return bool
      * @return string 
      */
     public function get()
     {
         if (empty($this->case)) {
-
             return false;
         }
 
         if ($this->misMatch(Ival::PATTERN[$this->rule[$this->case]], $this->case)) {
-
             return false;
         }
 
@@ -325,42 +295,33 @@ class Panic
     }
 
     /**
-     * Create default pattern validation
-     * @param string default pattern
-     * 
-     * @param string to validate
-     * 
-     * if validate doesn't match
-     * @return false  
-     * 
-     * if characters match pattern
+     * Create pattern with default rule validation
+     *
+     * @param string $param
+     * @param string $string
+     * @return bool  
      * @return string
      */
-    public function match($param, $string, $default = false)
+    public function match($param, $string)
     {
-        if ($this->misMatch(Ival::PATTERN[$param], $string))	{
-
-            return $default;
+        if ($this->misMatch(Ival::PATTERN[$param], $string)) {
+            return false;
         }
 
         return $string;
     }
 
     /**
-     * Create default filter validation
-     * @param string to validate
-     * 
-     * @param string default filter
-     * If validate match
-     * @return string 
-     * 
-     * If characters doesn't match 
-     * @return false
+     * Create filter with default rule validation
+     *
+     * @param string $param
+     * @param string $string
+     * @return bool $default
+     * @return string
      */
     public function filter($param, $string, $default = false)
     {
-        if ($this->filterVar($string, Ival::FILTER[$param]))	{
-
+        if ($this->filterVar($string, Ival::FILTER[$param])) {
             return $default;
         }
 
@@ -368,20 +329,16 @@ class Panic
     }
 
     /**
-     * Create custom pattern
-     * @param string any pattern
-     * @param string validation
-     * 
-     * if validate doesn't match
-     * @return false default
-     * 
-     * if characters match to pattern
+     * Create custom pattern without default rule
+     *
+     * @param string $pattern
+     * @param string $string
+     * @return bool $default
      * @return string
      */
     public function draft($pattern, $string, $default = false)
     {
         if ($this->misMatch($pattern, $string)) {
-
             return $default;
         }
 
@@ -389,17 +346,15 @@ class Panic
     }
 
     /**
-     * Identical string comparation
+     * Create identical string comparation
+     *
      * @param string $param
      * @param string $string
-     *
-     * @return false default
-     * @return true
+     * @return bool
      */
     public function equal($param, $string, $default = false)
     {
         if ($param === $string) {
-
             return true;
         }
 
@@ -407,17 +362,15 @@ class Panic
     }
 
     /**
-     * Hash equal string comparation
+     * Create hash equal string comparation
+     *
      * @param string $param
      * @param string $string
-     *
-     * @return false default
-     * @return string
+     * @return bool
      */
     public function hashEqual($param, $string, $default = false)
     {
         if (!hash_equals($param, $string)) {
-
             return $default;
         }
 
@@ -427,7 +380,9 @@ class Panic
     /**
      * Generate pregmatch validation
      *
-     * @return string comparable
+     * @param string $param
+     * @param string $string
+     * @return bool
      */
     protected function misMatch($param, $string)
     {
@@ -437,7 +392,9 @@ class Panic
     /**
      * Generate filter validation 
      *
-     * @return string comparable
+     * @param string $param
+     * @param string $string
+     * @return bool
      */
     protected function filterVar($param, $string)
     {
@@ -447,9 +404,9 @@ class Panic
     /**
      * Password verification parameter
      * 
-     * @param string password
-     * 
-     * @param string data 
+     * @param string $param
+     * @param string $data 
+     * @return array
      */
     public function verify($param, $data)
     {
@@ -459,40 +416,32 @@ class Panic
     }
 
     /**
-     * Create password message
+     * Create custom error message for password verify
      * 
-     * @param string message
-     * @return false show message
-     * 
-     * if validate goals
-     * @return true
+     * @param string $param
+     * @return bool
+     * @return string
      */
     public function warn($param = [])
     {
         if ($this->verify !== false) {
-
             return true;
 
         } else {
-
             foreach ([$param] as $key => &$value) 
-
                 return $value;
         }
     }
 
     /**
-     * Verify password 
-     * @param string
-     * @return true
-     * 
-     * if doesn't match
-     * @return false 
+     * Verify and catch a password 
+     *
+     * @param string $param
+     * @return bool
      */
     public function catch($param, $default = false)
     {
         if ($param !== true) {
-
             return $default;
         }			
 
@@ -500,9 +449,9 @@ class Panic
     }
 
     /**
-     * Custom readable base64 encode
-     * @param string
-     * 
+     * Create custom readable base64 encode
+     *
+     * @param string $string 
      * @return string
      */
     public function base64($string)
@@ -511,9 +460,9 @@ class Panic
     }
 
     /**
-     * Custom readable base64 decode
-     * @var string
-     * 
+     * Create reversable base64 decode
+     *
+     * @var string $string
      * @return string
      */
     public function pure64($string)
@@ -523,8 +472,8 @@ class Panic
 
     /**
      * Clean html entities characters
-     * @param string html
-     * 		 * 
+     *
+     * @param string $string
      * @return string
      */
     public function htmlSafe($string)
@@ -534,8 +483,8 @@ class Panic
 
     /**
      * Raw html entity characters
-     * @var string output html
-     * 		 * 
+     *
+     * @var string $string
      * @return string
      */
     public function htmlRaw($string)
