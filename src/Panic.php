@@ -15,11 +15,11 @@ namespace Moviet\Validator;
 use Moviet\Validator\Ival;
 
 /**
- * Start Panic
-*/
+ * Don't Panic
+ */
 class Panic
 {	
-  /**
+    /**
      * @param string $case
      */
     protected $case;
