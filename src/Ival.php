@@ -23,7 +23,7 @@ abstract class Ival
                 'en' => 'Character Too Long'];
 	/**
 	 * Default filter
-	*/
+	 */
 	const FILTER = 
 	[
         ':int'      => FILTER_VALIDATE_INT,
@@ -41,7 +41,7 @@ abstract class Ival
 
 	/**
 	 * Default pattern
-	*/
+	 */
 	const PATTERN = 
 	[
         ':num'          => '/^[0-9]*$/',
